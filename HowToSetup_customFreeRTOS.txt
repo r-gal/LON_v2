@@ -1,0 +1,91 @@
+1. Generate Project in STM32CobeMX
+2. In main.c file add:
+ - #include "LonMain.hpp" in USER CODE BEGIN Includes
+ - applMain(); in USER CODE BEGIN 2
+3. Copy FreeRTOSConfigTemplate.h from LON directory to project directory and rename into FreeRTOSConfig.h
+4. Copy GeneralConfigTemplate.h from LON directory to project directory and rename into GeneralConfig.h
+5. set CONF_USE_OWN_FREERTOS 1 in GeneralConfig.h
+6. Add RTOS kernel files 
+7. Add RTOS portable files (port.c, portmacro.h) according to platform and compiler
+8. add all files from LON directory
+9. add all files from MyLibs directory
+
+10. Enable Commands:
+- CONF_USE_COMMANDS 1
+- LON_USE_COMMAND_LINK 1
+
+11. Enable uart terminal
+- CONF_USE_UART_TERMINAL 1
+- COMMAND_USE_UART 1
+
+12.Enable RTC:
+- CONF_USE_TIME 1
+In rtc.c add:
+ - if (READ_BIT(hrtc.Instance->ISR, RTC_ISR_INITS) == 0U){ in USER CODE BEGIN Check_RTC_BKUP
+ - } after HAL_RTC_SetDate calling - IMPORTANT! this will disapear after each STM32CubeMX code generation.
+
+13. Enable runTime stats:
+ - CONF_USE_RUNTIME 1
+
+14 Enable watchdog:
+ - CONF_USE_WATCHDOG 1
+
+15. Enable RNG:
+ - CONF_USE_RNG 1
+
+16. Enable SD_CARD with file system.
+ - CONF_USE_SDCARD 1
+Add all files from MyLibsFAT _v2 directory
+
+17. Enable sensors database:
+ - LON_USE_SENSORS_DATABASE 1
+
+18. Enable Ethernet:
+ -  add all files from MyEthernet_v2 directory
+ - add all files from MyTcp_v2 directory
+ - set CONF_USE_ETHERNET 1
+ - Copy EthernetConfigTemplate.h from LON directory to project directory and rename into EthernetConfig.h
+ - copy to eth.c, section USER CODE BEGIN ETH_Init 1:
+   memset( &( DMATxDscrTab ), '\0', sizeof( DMATxDscrTab ) );
+   memset( &( DMARxDscrTab ), '\0', sizeof( DMARxDscrTab ) );
+
+ 19. Enable of MAC address generation from UID:
+  - USE_UID_TO_MAC 1 in EthernetConfig.h
+
+ 20. Enable DHCP
+  - USE_DHCP 1 in EthernetConfig.h
+
+ 21. Enable NTP
+  - USE_NTP 1 in EthernetConfig.h
+
+ 22. Enable Telnet
+  - USE_TELNET 1 in EthernetConfig.h
+  - COMMAND_USE_TELNET 1 in GeneralConfig.h
+
+ 23. Enable FTP
+  - USE_FTP 1 in EthernetConfig.h
+
+ 24. Enable HTTP
+  - USE_HTTP 1 in EthernetConfig.h
+  - LON_USE_HTTP_INTERFACE 1 in GeneralConfig.h
+
+ 25. Enable Irrigation unit
+  - LON_USE_IRRIGATION_UNIT 1 in GeneralConfig.h
+
+ 26. Enable Weather unit
+  - LON_USE_WEATHER_UNIT 1 in GeneralConfig.h
+
+ 27. Enable power info
+  - in adc.h USER CODE BEGIN ADC1_Init 2 add
+  HAL_ADCEx_Calibration_Start(&hadc1,ADC_CALIB_OFFSET,ADC_SINGLE_ENDED);
+  HAL_ADCEx_Calibration_Start(&hadc1,ADC_CALIB_OFFSET_LINEARITY,ADC_SINGLE_ENDED);
+
+  - in adc.h USER CODE BEGIN ADC3_Init 2 add
+  HAL_ADCEx_Calibration_Start(&hadc3,ADC_CALIB_OFFSET,ADC_SINGLE_ENDED);
+  HAL_ADCEx_Calibration_Start(&hadc3,ADC_CALIB_OFFSET_LINEARITY,ADC_SINGLE_ENDED);
+ 
+
+
+
+
+

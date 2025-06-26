@@ -1,0 +1,83 @@
+1. Generate Project in STM32CobeMX
+2. In main.c file add:
+ - #include "LonMain.hpp" in USER CODE BEGIN Includes
+ - applMain(); in USER CODE BEGIN 2
+3. Exclude heap_4.c from build.
+4. In FreeRTOSCONFIG.h add:
+- #include "GeneralConfig.h" USER CODE BEGIN Includes
+5. Copy GeneralConfigTemplate.h from LON directory to project directory and rename into GeneralConfig.h
+6. add all files from LON directory
+7. add all files from MyLibs directory
+
+8. Enable Commands:
+- CONF_USE_COMMANDS 1
+- LON_USE_COMMAND_LINK 1
+
+9. Enable uart terminal
+- CONF_USE_UART_TERMINAL 1
+- COMMAND_USE_UART 1
+
+10.Enable RTC:
+- CONF_USE_TIME 1
+In rtc.c add:
+ - if (READ_BIT(hrtc.Instance->ISR, RTC_ISR_INITS) == 0U){ in USER CODE BEGIN Check_RTC_BKUP
+ - } after HAL_RTC_SetDate calling - IMPORTANT! this will disapear after each STM32CubeMX code generation.
+
+11. Enable runTime stats:
+ - CONF_USE_RUNTIME 1
+
+12 Enable watchdog:
+ - CONF_USE_WATCHDOG 1
+
+13. Enable RNG:
+ - CONF_USE_RNG 1
+
+14. Enable SD_CARD with file system.
+ - CONF_USE_SDCARD 1
+Add all files from LON directory
+
+15. Enable sensors database:
+ - LON_USE_SENSORS_DATABASE 1
+
+16. Enable Ethernet:
+ -  add all files from MyEthernet_v2 directory
+ - add all files from MyTcp_v2 directory
+ - set CONF_USE_ETHERNET 1
+ - Copy EthernetConfigTemplate.h from LON directory to project directory and rename into EthernetConfig.h
+ - copy to eth.c, section USER CODE BEGIN ETH_Init 1:
+   memset( &( DMATxDscrTab ), '\0', sizeof( DMATxDscrTab ) );
+   memset( &( DMARxDscrTab ), '\0', sizeof( DMARxDscrTab ) );
+
+ 17 Enable of MAC address generation from UID:
+  - USE_UID_TO_MAC 1
+
+ 18 Enable DHCP
+  - USE_DHCP 1
+
+ 19 Enable NTP
+  - USE_NTP 1
+
+ 20. Enable Telnet
+  - USE_TELNET 1 in EthernetConfig.h
+  - COMMAND_USE_TELNET 1 in GeneralConfig.h
+
+ 21. Enable FTP
+  - USE_FTP 1 in EthernetConfig.h
+
+ 22. Enable HTTP
+  - USE_HTTP 1 in EthernetConfig.h
+  - LON_USE_HTTP_INTERFACE 1 in GeneralConfig.h
+
+ 23. Enable Irrigation unit
+  - LON_USE_IRRIGATION_UNIT 1 in GeneralConfig.h
+
+ 24. Enable Weather unit
+  - LON_USE_WEATHER_UNIT 1 in GeneralConfig.h
+
+
+
+
+
+
+
+

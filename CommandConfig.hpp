@@ -1,0 +1,13 @@
+#ifndef COMMANDCONFIG_H
+#define COMMANDCONFIG_H
+
+#define MAX_NO_OF_ARGUMENTS 16
+#define MAX_ARGUMENT_SIZE 16
+#define ARGUMENTS_SEPARATOR_CHAR ','
+#define COMMAND_SEPARATOR_CHAR '@'
+#define ARG_EQUAL_CHAR '='
+#define COMMAND_END_CHAR ';'
+
+
+
+#endif
