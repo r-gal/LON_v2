@@ -121,11 +121,35 @@ void LonWeatherSensor_c::Tick(bool fullHourIndicator)
 
   if(fullHourIndicator)
   {  
-    int hourSum = 0;
+    float hourSum = 0;
+    int cnt = 0;
 
     for(int i=0;i<12;i++)
     {
-      hourSum += lastHour[i];
+      if(lastHour[i] > -64)
+      {
+        hourSum += lastHour[i];
+        cnt++;
+      }
+    }
+
+    if(cnt > 0)
+    {
+      if (averageMode == true)
+      {
+        hourSum /= cnt;
+      }
+    }
+    else
+    {
+      if (averageMode == true)
+      {
+        hourSum = -100;
+      }
+      else
+      {
+        hourSum = 0;
+      }
     }
 
     lastHours[lastHoursIdx] = hourSum;
@@ -236,10 +260,25 @@ void LonWeatherSensor_c::RestoreStats(void)
       }
       
     }
-    if((cnt > 0) && (averageMode == true))
+    if(cnt > 0)
     {
-      val /= cnt;
+      if (averageMode == true)
+      {
+        val /= cnt;
+      }
     }
+    else
+    {
+      if (averageMode == true)
+      {
+        val = -100;
+      }
+      else
+      {
+        val = 0;
+      }
+    }
+
 
     lastHours[h] = val;
   }
@@ -249,7 +288,7 @@ void LonWeatherSensor_c::RestoreStats(void)
   for(int i = 0;i<12;i++)
   {
     lastHour[i] = probesArray[ 47*12 + i];
-    if(lastHour[i] < -64.0)
+    if((averageMode == false) && (lastHour[i]  < -64))
     {
       lastHour[i] = 0;
     }

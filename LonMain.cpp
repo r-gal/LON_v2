@@ -74,6 +74,10 @@ HeapRegion_t xRAMD2HeapRegions[] =
 #endif
 
 
+//uint8_t* stackStart[32];
+//uint32_t stackSize[32];
+
+
 
 #if MEM_USE_DTCM == 1
 
@@ -119,9 +123,23 @@ void vPortFree( void *pv )
 }
 
 #if MEM_USE_DTCM == 1
-void * pvPortMallocStack( size_t xSize ) 
+void * AllocFromCCM( size_t xSize ) 
 {
   return ccmManager.Malloc(xSize,1024);
+}
+void FreeToCCM( void * pv ) 
+{
+  ccmManager.Free(pv);
+}
+
+
+void * pvPortMallocStack( size_t xSize ) 
+{
+  void* pv =  ccmManager.Malloc(xSize,1024);
+  //printf("allocated stack: %d bytes at 0x%08X\n",xSize,pv);
+
+
+  return pv;
 }
 void vPortFreeStack( void * pv )
 {

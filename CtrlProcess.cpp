@@ -52,6 +52,11 @@ void CtrlProcess_c::main(void)
   sdCard.Init();
   #endif
 
+  #if CONF_USE_LOGGING == 1
+  loggingUnit.Init();
+  LoggingUnit_c::Log(LOG_FATAL_ERROR,"System restarted \n");
+  #endif
+
   #if DEBUG_PROCESS > 0
   printf("Ctrl proc started \n");
   #endif
@@ -68,12 +73,16 @@ void CtrlProcess_c::main(void)
 
     switch(sigNo)
     {
-    #if CONF_USE_SDCARD == 1
+      #if CONF_USE_SDCARD == 1
       case SIGNO_SDIO_CardDetectEvent:
         sdCard.CardDetectEvent();
         releaseSig = false;
         break;
-        #endif
+      #endif
+      #if CONF_USE_LOGGING == 1
+        case SIGNO_LOG:
+        loggingUnit.HandleLog((logSig_c*)recSig_p);
+      #endif
       default:
       break;
 

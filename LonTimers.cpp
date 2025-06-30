@@ -16,7 +16,7 @@
 #include "LonTimers.hpp"
 #include "LonDatabase.hpp"
 
-
+#include "LoggingUnit.hpp"
 
 #if CONF_USE_RNG == 1
 #include "RngClass.hpp"
@@ -208,6 +208,17 @@ void LonTimer_c::UpdateState(TimDevState_et timDevState,bool force)
       {
         uint8_t portState = outDev_p->GetOutputVal(conf->port[i]);
 
+        if(portState != timDevState)
+        {
+          char strtmp[64];
+          snprintf(strtmp,64,"TIMER SET %d 0x%08X:%d\n",timDevState,conf->lAdr[i],conf->port[i]);
+          LoggingUnit_c::Log(LOG_TIME_EVENT,strtmp);
+
+          //LoggingUnit_c::Log(LOG_TIME_EVENT,"TIMER SET %d 0x%08X:%d\n",timDevState,conf->lAdr[i],conf->port[i]);
+
+        }
+
+
         if((portState != timDevState) || force)
         {
           outDev_p->SetOutput(conf->port[i],timDevState);
@@ -302,6 +313,12 @@ void LonTimer_c::SetPWMstates(void)
       outDev_p->SetOutput(3,tR);
       outDev_p->SetOutput(4,tG);
       outDev_p->SetOutput(5,tB);
+
+      char strtmp[64];
+      snprintf(strtmp,64,"SET PWM R=%d, G=%d, B=%d, 0x%08X\n", tR,tG,tB,outDev_p->GetLAdr());
+      LoggingUnit_c::Log(LOG_TIME_EVENT,strtmp);
+
+      //LoggingUnit_c::Log(LOG_TIME_EVENT,"SET PWM R=%d, G=%d, B=%d, 0x%08X\n", tR,tG,tB,outDev_p->GetLAdr());
 
       LonDevice_c* relDev_p = trafProc_p->GetDevByLadr(conf->lAdr[1]);
 

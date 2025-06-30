@@ -407,19 +407,22 @@ void LonSensorsDatabaseProcess_c::GetFileBufferSize(int type, uint16_t* bufferSi
 
 void LonSensorsDatabaseProcess_c::GetFileName(int type, int day, uint32_t lAdr, uint8_t port, char* nameBuf)
 {
+  int dayPrefix = day/100;
+  dayPrefix = dayPrefix*100;
+
   switch(type)
   {
     case 0: /* higro */
     case 1: /* press */
-      snprintf(nameBuf,126,"sensors/%d/%08X.LOG",day,lAdr);
+      snprintf(nameBuf,126,"sensors/%d/%d/%08X.LOG",dayPrefix,day,lAdr);
     break;
 
     case 2: /* power */
-      snprintf(nameBuf,126,"sensors/%d/POWER.LOG",day);
+      snprintf(nameBuf,126,"sensors/%d/%d/POWER.LOG",dayPrefix,day);
       break;
 
     case 3: /* rain */
-      snprintf(nameBuf,126,"sensors/%d/RAIN%d.LOG",day,port);
+      snprintf(nameBuf,126,"sensors/%d/%d/RAIN%d.LOG",dayPrefix,day,port);
       break;
     default:
       strcpy(nameBuf, "");

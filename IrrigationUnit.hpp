@@ -69,7 +69,7 @@ class IrrigationInstance_c
   IrigationConfig_st* GetConfig(void);
 
 
-  void Check(LonTime_c* recSig_p);
+  void Check(LonTime_c* recSig_p, int idx);
 
   void SetOutputs(bool newState, bool force);
 

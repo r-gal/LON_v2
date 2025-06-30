@@ -41,6 +41,7 @@
 #define COMMAND_USE_TELNET 0
 #define COMMAND_USE_UART 0
 #define CONF_USE_WATCHDOG 1
+#define CONF_USE_LOGGING 0
 
 #define DEBUG_PROCESS 0
 #define DEBUG_SDCARD 0
@@ -102,6 +103,10 @@ for STM32F466
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS  6
 
 #define configCHECK_FOR_STACK_OVERFLOW 1
+
+
+void * AllocFromCCM( size_t xSize ) ;
+void FreeToCCM( void * pv );
 
 /* RUNTIME config */
 #if CONF_USE_RUNTIME == 1

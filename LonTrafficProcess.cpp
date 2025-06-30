@@ -36,6 +36,7 @@
 #include "TimeClass.hpp"
 
 #include "LonTrafficProcess.hpp"
+#include "LoggingUnit.hpp"
 /*
 
 #include "FaultHandler.hpp"
@@ -330,10 +331,15 @@ void LonTrafficProcess_c::HandleDataSw(LonDevice_c* dev_p, uint8_t noOfEvents, u
 
       dev_p->HandleSwEvent(this,port,event);
 
-      #if LON_USE_COMMAND_LINK == 1
+      #if LON_USE_COMMAND_LINK == 1 | CONF_USE_LOGGING == 1
       char* strBuf = new char[64];
-      sprintf(strBuf,"SW event, ladr=%08X port=%d,event =%s \n",lAdr,port,eventString[event]);
+      snprintf(strBuf,64,"SW event, ladr=%08X port=%d,event =%s \n",lAdr,port,eventString[event]);
+      #if CONF_USE_LOGGING == 1
+      LoggingUnit_c::Log(LOG_USER_EVENT,strBuf);
+      #endif
+      #if LON_USE_COMMAND_LINK == 1
       CommandHandler_c::SendToAll(strBuf);
+      #endif
       delete[] strBuf;
 
       #endif

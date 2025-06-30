@@ -18,6 +18,8 @@
 #include "LonTrafficProcess.hpp"
 #include "LonDevice.hpp"
 
+#include "LoggingUnit.hpp"
+
 
 #if LON_USE_WEATHER_UNIT == 1
 #include "LonWeather.hpp"
@@ -52,7 +54,7 @@ void IrrigationUnit_c::TimeTick(LonTime_c* recSig_p)
 
       if(cont)
       {
-        inst->Check(recSig_p);
+        inst->Check(recSig_p,idx);
       }
       else
       {
@@ -64,17 +66,19 @@ void IrrigationUnit_c::TimeTick(LonTime_c* recSig_p)
   }
 }
 
-void IrrigationInstance_c::Check(LonTime_c* recSig_p)
+void IrrigationInstance_c::Check(LonTime_c* recSig_p, int idx)
 {
   uint16_t actTime = recSig_p->time.Hour * 60 + recSig_p->time.Minute;
 
+  bool changed = false;
 
+  IRRIG_STATE_et newState = state;
 
   if(state == IRRIG_INACTIVE)
   {
     /*check if turn on */
     uint16_t startTime;
-    uint16_t stopTime;
+    uint16_t stopTime;    
     for(int i =0;i<2;i++)
     {
       if(config_p->durationTime[i] > 0)
@@ -106,17 +110,20 @@ void IrrigationInstance_c::Check(LonTime_c* recSig_p)
                float tempDecreaseRatio = 0;(config_p->temperatureCentre[i] - tempStat) * config_p->temperatureCorrection[i];
               realStopTime -= (uint32_t) tempDecreaseRatio;
             }
+          #else
+            usedRainStat = 0;
+            usedTempStat = 0;
           #endif
           
            
 
           if(actTime < realStopTime)
           {            
-            state = IRRIG_ACTIVE;
+            newState = IRRIG_ACTIVE;
           }
           else
           {
-            state = IRRIG_FINISHED;
+            newState = IRRIG_FINISHED;
           }
         }
         break;;
@@ -132,11 +139,11 @@ void IrrigationInstance_c::Check(LonTime_c* recSig_p)
 
       if(actTime >= admStopTime)
       {
-        state = IRRIG_INACTIVE;
+        newState = IRRIG_INACTIVE;
       }
       else
       {
-        state = IRRIG_FINISHED;
+        newState = IRRIG_FINISHED;
       }
     }
   }
@@ -144,9 +151,27 @@ void IrrigationInstance_c::Check(LonTime_c* recSig_p)
   {
     if(actTime > admStopTime)
     {
-      state = IRRIG_INACTIVE;
+      newState = IRRIG_INACTIVE;
     }
   }
+
+  if(state != newState)
+  {
+
+    LoggingUnit_c::Log(LOG_TIME_EVENT,
+    "IRRIG%d SET %d, uR=%0.2f uT=%0.2f %02d:%02d\n",
+    idx,
+    newState,
+    usedRainStat,
+    usedTempStat,
+    realStopTime/60,
+    realStopTime%60);
+
+
+  }
+  state = newState;
+
+
 
   SetOutputs(state == IRRIG_ACTIVE, recSig_p->time.Second == 0  );
 

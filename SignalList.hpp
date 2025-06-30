@@ -46,6 +46,8 @@ class SignalList_c
     SIGNO_SOCKET_ADD,
     SIGNO_IP_CHANGED,
 
+    SIGNO_LOG,
+
     SIGNO_LON_INTERFACE_TICK,
     SIGNO_LON_IODATAOUT,
     SIGNO_LON_IODATAIN_TRAF,
@@ -224,6 +226,27 @@ class pwrGetInfo_c : public Sig_c
   uint32_t* data2_p;
 
 };
+
+#if CONF_USE_LOGGING == 1
+
+#define LOG_TEXT_LENGTH 128
+class logSig_c : public Sig_c
+{
+  public:
+  logSig_c(void) : Sig_c(SIGNO_LOG,HANDLE_CTRL)
+   {
+     text[0] = 0;
+   }
+
+  SystemTime_st time;
+  uint16_t size;
+  uint8_t level;
+  uint8_t spare;
+  char  text[LOG_TEXT_LENGTH];
+  
+
+};
+#endif
 
 
 #endif

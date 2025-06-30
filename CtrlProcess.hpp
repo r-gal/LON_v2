@@ -25,6 +25,8 @@
 #include "BootUnit.hpp"
 #endif
 
+#include "LoggingUnit.hpp"
+
 
 class CtrlProcess_c : public process_c
 {
@@ -46,8 +48,11 @@ class CtrlProcess_c : public process_c
   #if CONF_USE_BOOTUNIT == 1
   BootUnit_c bootUnit;
   #endif
-
- 
+  
+  #if CONF_USE_LOGGING == 1
+  LoggingUnit_c loggingUnit;
+  #endif
+  
 
   public :
 
