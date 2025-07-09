@@ -1,6 +1,7 @@
 # Overview
 
 This program is firmware to Home Automation Main module.
+Code for peripferal modules is stored in https://github.com/r-gal/LON_devices repository.
 
 
 # Compilation
