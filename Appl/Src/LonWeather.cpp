@@ -154,7 +154,7 @@ void LonWeatherSensor_c::Tick(bool fullHourIndicator)
 
     lastHours[lastHoursIdx] = hourSum;
     lastHoursIdx++;
-    if(lastHoursIdx >= 12) { lastHoursIdx = 0; }
+    if(lastHoursIdx >= 48) { lastHoursIdx = 0; }
   }
   ClearActVal();
 }
