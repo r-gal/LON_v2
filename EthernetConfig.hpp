@@ -14,6 +14,7 @@
 #define DEBUG_NTP 0
 
 #define USE_UID_TO_MAC 1
+#define ETHERNET_USE_RESET 1
 
 #define ETH_STATS 10
 

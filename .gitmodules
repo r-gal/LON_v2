@@ -7,3 +7,12 @@
 [submodule "Lib_Fat"]
 	path = Lib_Fat
 	url = https://github.com/r-gal/Lib_Fat
+[submodule "FreeRTOS-Kernel"]
+	path = FreeRTOS-Kernel
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel
+[submodule "cmsis-device-h7"]
+	path = cmsis-device-h7
+	url = https://github.com/STMicroelectronics/cmsis-device-h7
+[submodule "stm32h7xx-hal-driver"]
+	path = stm32h7xx-hal-driver
+	url = https://github.com/STMicroelectronics/stm32h7xx-hal-driver
